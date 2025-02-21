@@ -1,0 +1,17 @@
+target/
+
+.mvn/
+mvnw
+mvnw.cmd
+
+.idea/
+.vscode/
+
+*.tmp
+*.bak
+*.swp
+
+*.iml
+
+.DS_Store
+Thumbs.db
