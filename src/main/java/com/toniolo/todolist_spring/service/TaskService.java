@@ -51,6 +51,7 @@ public class TaskService {
     public TaskModel createTask(TaskModel task) {
         UserModel currentUser = getCurrentUser();
         task.setUser(currentUser);
+        task.setStatus(TaskStatus.PENDING);
         return taskRepository.save(task);
     }
 

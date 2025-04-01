@@ -1,5 +1,8 @@
 package com.toniolo.todolist_spring.controller;
 
+import com.toniolo.todolist_spring.dto.TaskRequestDTO;
+import com.toniolo.todolist_spring.dto.TaskResponseDTO;
+import com.toniolo.todolist_spring.mapper.TaskMapper;
 import com.toniolo.todolist_spring.model.TaskModel;
 import com.toniolo.todolist_spring.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,40 +20,45 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private TaskMapper taskMapper;
+
     @GetMapping
-    public ResponseEntity<List<TaskModel>> getTasks() {
+    public ResponseEntity<List<TaskResponseDTO>> getTasks() {
         List<TaskModel> tasks = taskService.getTasks();
 
         if (tasks.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.ok(tasks);
+        return ResponseEntity.ok(taskMapper.toDtoList(tasks));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskModel> getTaskById(@PathVariable Long id) {
+    public ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable Long id) {
         Optional<TaskModel> task = taskService.getTaskById(id);
-        return task.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return task.map(t -> ResponseEntity.ok(taskMapper.toDto(t)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<TaskModel> createTask(@RequestBody TaskModel task) {
-        TaskModel createdTask = taskService.createTask(task);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
+    public ResponseEntity<TaskResponseDTO> createTask(@RequestBody TaskRequestDTO taskDto) {
+        TaskModel taskModel = taskMapper.toEntity(taskDto);
+        TaskModel createdTask = taskService.createTask(taskModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskMapper.toDto(createdTask));
     }
 
     @PutMapping("/{id}/status/in-progress")
-    public ResponseEntity<TaskModel> markTaskAsInProgress(@PathVariable Long id) {
+    public ResponseEntity<TaskResponseDTO> markTaskAsInProgress(@PathVariable Long id) {
         Optional<TaskModel> updatedTask = taskService.markTaskAsInProgress(id);
-        return updatedTask.map(ResponseEntity::ok)
+        return updatedTask.map(t -> ResponseEntity.ok(taskMapper.toDto(t)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}/status/completed")
-    public ResponseEntity<TaskModel> markTaskAsCompleted(@PathVariable Long id) {
+    public ResponseEntity<TaskResponseDTO> markTaskAsCompleted(@PathVariable Long id) {
         Optional<TaskModel> updatedTask = taskService.markTaskAsDone(id);
-        return updatedTask.map(ResponseEntity::ok)
+        return updatedTask.map(t -> ResponseEntity.ok(taskMapper.toDto(t)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
