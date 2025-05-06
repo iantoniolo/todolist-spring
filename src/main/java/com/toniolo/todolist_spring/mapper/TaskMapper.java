@@ -4,7 +4,6 @@ import com.toniolo.todolist_spring.dto.TaskRequestDTO;
 import com.toniolo.todolist_spring.dto.TaskResponseDTO;
 import com.toniolo.todolist_spring.dto.UserResponseDTO;
 import com.toniolo.todolist_spring.model.TaskModel;
-import com.toniolo.todolist_spring.model.UserModel;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

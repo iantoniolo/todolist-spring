@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,7 +27,13 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(TaskController.class)
+@WebMvcTest(
+        controllers = TaskController.class,
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = com.toniolo.todolist_spring.infra.SecurityFilter.class
+        )
+)
 @AutoConfigureMockMvc(addFilters = false)
 class TaskControllerTest {
 
@@ -44,8 +52,8 @@ class TaskControllerTest {
     @Test
     @DisplayName("Deve retornar lista de tarefas")
     void testGetTasks() throws Exception {
-        TaskModel task = new TaskModel(); // preencha os campos conforme seu model
-        TaskResponseDTO dto = new TaskResponseDTO(); // preencha os campos conforme seu dto
+        TaskModel task = new TaskModel();
+        TaskResponseDTO dto = new TaskResponseDTO();
 
         Mockito.when(taskService.getTasks()).thenReturn(Arrays.asList(task));
         Mockito.when(taskMapper.toDtoList(anyList())).thenReturn(Arrays.asList(dto));
@@ -89,7 +97,7 @@ class TaskControllerTest {
     @Test
     @DisplayName("Deve criar nova tarefa")
     void testCreateTask() throws Exception {
-        TaskRequestDTO requestDto = new TaskRequestDTO(); // preencha os campos conforme seu dto
+        TaskRequestDTO requestDto = new TaskRequestDTO();
         TaskModel taskModel = new TaskModel();
         TaskResponseDTO responseDto = new TaskResponseDTO();
 
