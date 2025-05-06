@@ -48,9 +48,9 @@ Este é um projeto **inicial de estudos** em Java, que implementa uma API de ToD
 
   - As principais variáveis já estão configuradas no docker-compose.yml, mas você pode alterá-las conforme necessário:
 
-  SPRING_DATASOURCE_URL
-  SPRING_DATASOURCE_USERNAME
-  SPRING_DATASOURCE_PASSWORD
+  - SPRING_DATASOURCE_URL
+  - SPRING_DATASOURCE_USERNAME
+  - SPRING_DATASOURCE_PASSWORD
 
 ### Rodando os testes
 
