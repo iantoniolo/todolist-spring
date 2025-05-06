@@ -1,5 +1,6 @@
 package com.toniolo.todolist_spring.service;
 
+import com.toniolo.todolist_spring.model.UserModel;
 import com.toniolo.todolist_spring.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,10 @@ public class AuthorizationService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username);
+        UserDetails user = repository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("Usuário não encontrado: " + username);
+        }
+        return user;
     }
 }
